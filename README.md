@@ -26,3 +26,43 @@ const { data } = useCall(getMintCost());
 
 const { send } = useSend(mint(id, to));
 ```
+
+```json
+{
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "amount",
+      "type": "uint256"
+    }
+  ],
+  "name": "stake",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+}
+```
+
+```js
+interface Call<Args> {
+  contract: Contract;
+  method: string;
+  args: Args;
+}
+
+function useSend(call: Call) {
+  // ...
+}
+
+function stake(amount: BigNumberish): Call {
+  // ...
+}
+
+function useStake(): { send: unknown } {
+  return useSend({ contract, method: "stake" });
+}
+
+const { send } = useStake();
+
+send(amount);
+```
