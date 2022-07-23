@@ -1,15 +1,21 @@
 {
-  "name": "generate",
+  "name": "@useabi/generate",
   "version": "1.0.0",
   "description": "",
-  "main": "generate.js",
+  "main": "src/index.js",
+  "bin": {
+    "useabi": "./src/index.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "public": "npm publish",
+    "format": "prettier --write \"./**/*.js\"",
+    "format:check": "prettier --check \"./**/*.js\""
   },
   "keywords": [],
-  "author": "",
+  "author": "GeraldHost",
   "license": "ISC",
   "dependencies": {
-    "mustache": "^4.2.0"
+    "mustache": "^4.2.0",
+    "prettier": "^2.7.1"
   }
 }

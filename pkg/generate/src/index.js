@@ -1,8 +1,9 @@
+#! /usr/bin/env node
+
 const fs = require("fs");
 const path = require("path");
 const Mustache = require("mustache");
 
-const outputDir = path.resolve(__dirname, "output");
 const templatePath = path.resolve(__dirname, "template.mustache");
 
 function exitLog(str) {
@@ -10,25 +11,22 @@ function exitLog(str) {
   process.exit();
 }
 
-function cleanOutput() {
-  if (fs.existsSync(outputDir)) {
-    fs.rmdirSync(outputDir, { force: true, recursive: true });
+function cleanOutput(path) {
+  if (fs.existsSync(path)) {
+    fs.rmdirSync(path, { force: true, recursive: true });
   }
-  fs.mkdirSync(outputDir);
+  fs.mkdirSync(path);
 }
 
-function saveAddresses(name, addresses) {
+function saveAddresses(name, addresses, out) {
   fs.writeFileSync(
-    path.resolve(outputDir, name, "address.json"),
+    path.resolve(out, name, "address.json"),
     JSON.stringify(addresses)
   );
 }
 
-function saveAbi(name, abi) {
-  fs.writeFileSync(
-    path.resolve(outputDir, name, "abi.json"),
-    JSON.stringify(abi)
-  );
+function saveAbi(name, abi, out) {
+  fs.writeFileSync(path.resolve(out, name, "abi.json"), JSON.stringify(abi));
 }
 
 function parseTypes(types) {
@@ -71,8 +69,9 @@ function parseAbi(abi) {
       method: obj.name,
       arguments: args,
       returns,
-      argumentTypesString: args.length <= 0 ? "never" : args.join(","),
-      returnsTypesString: returns.length <= 0 ? "never" : returns.join(","),
+      argumentTypesString: args.length <= 0 ? "never" : `[${args.join(",")}]`,
+      returnsTypesString:
+        returns.length <= 0 ? "never" : `[${returns.join(",")}]`,
       hookName: `use${capitalise(obj.name)}`,
       stateMutability: obj.stateMutability,
     };
@@ -84,29 +83,29 @@ function parseAbi(abi) {
   };
 }
 
-function saveIndex(name, abi) {
+function saveIndex(name, abi, out) {
   const template = fs.readFileSync(templatePath, "utf8");
   const result = parseAbi(abi);
   const content = Mustache.render(template, result);
-
-  console.log(content);
-
-  fs.writeFileSync(path.resolve(outputDir, name, "index.ts"), "");
+  fs.writeFileSync(path.resolve(out, name, "index.ts"), content);
 }
 
 function main() {
   const inputDirectory = process.argv[2];
-  if (!inputDirectory) {
-    exitLog("Usage: ./generate.js <INPUT_PATH>");
+  const outputDiretcory = process.argv[3];
+
+  if (!inputDirectory || !outputDiretcory) {
+    exitLog("Usage: useabi <INPUT_PATH> <OUTPUT_PATH>");
   }
 
-  const inputDirectoryPath = path.join(__dirname, inputDirectory);
+  const inputDirectoryPath = path.resolve(inputDirectory);
+  const outputDirectoryPath = path.resolve(outputDiretcory);
 
   if (!fs.existsSync(inputDirectoryPath)) {
     exitLog("input directory not found: ", inputDirectory);
   }
 
-  cleanOutput();
+  cleanOutput(outputDirectoryPath);
 
   const files = fs.readdirSync(inputDirectoryPath);
   const jsonFiles = files.filter((file) => file.endsWith(".json"));
@@ -118,10 +117,10 @@ function main() {
       fs.readFileSync(path.resolve(inputDirectoryPath, file), "utf8")
     );
 
-    fs.mkdirSync(path.resolve(outputDir, name.toLowerCase()));
-    saveAddresses(name, json.addresses);
-    saveAbi(name, json.abi);
-    saveIndex(name, json.abi);
+    fs.mkdirSync(path.resolve(outputDirectoryPath, name.toLowerCase()));
+    saveAddresses(name, json.addresses, outputDirectoryPath);
+    saveAbi(name, json.abi, outputDirectoryPath);
+    saveIndex(name, json.abi, outputDirectoryPath);
   }
 }
 

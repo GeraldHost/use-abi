@@ -1,5 +1,3 @@
-import { Contract } from "@ethersproject/contracts";
-import { JsonRpcProvider } from "@ethersproject/providers";
 import {
   useState,
   useEffect,
@@ -7,6 +5,8 @@ import {
   createContext,
   useContext,
 } from "react";
+import { Contract } from "@ethersproject/contracts";
+import { JsonRpcProvider } from "@ethersproject/providers";
 
 interface Addresses {
   [chainId: number]: string;
@@ -27,7 +27,7 @@ export function useRefresh() {
   return { refresh, tick };
 }
 
-export function useCall<T, U extends []>(
+export function useCall<U extends [], T>(
   addresses: Addresses,
   contract: Contract,
   method: string,

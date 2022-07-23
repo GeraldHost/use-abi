@@ -1,8 +1,8 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { useEthers } from "@usedapp/core";
+import { Provider } from "@useabi/internal/provider";
 
-import { useGetCount, useIncrement } from "./counter/index";
-import { Provider } from "./Provider";
+import { useGetCount, useIncrement } from "./hooks/counter";
 
 function Counter() {
   const { data: count } = useGetCount();
