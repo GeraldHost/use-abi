@@ -1,0 +1,15 @@
+{
+  "name": "use-abi",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "./pkg"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-GeraldHost:GeraldHost/use-abi.git"
+  },
+  "keywords": [],
+  "author": "GeraldHost",
+  "license": "ISC"
+}
