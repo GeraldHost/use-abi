@@ -1,0 +1,23 @@
+// Example of generated content
+import { Contract } from "@ethersproject/contracts";
+import { useCall, useSend } from "../internal";
+import { BigNumberish } from "ethers";
+
+import { ZERO_ADDRESS } from "../constants";
+
+import ABI from "./abi.json";
+import ADDRESSES from "./address.json";
+
+const contract = new Contract(ZERO_ADDRESS, ABI);
+{{#view}}
+
+export function {{hookName}}() {
+  return useCall<{{returnsTypesString}}, {{argumentTypesString}}>(ADDRESSES, contract, "{{method}}");
+}
+{{/view}}
+{{#send}}
+
+export function {{hookName}}() {
+  return useSend<{{argumentTypesString}}>(ADDRESSES, contract, "{{method}}");
+}
+{{/send}}
