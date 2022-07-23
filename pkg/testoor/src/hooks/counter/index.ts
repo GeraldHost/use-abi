@@ -9,19 +9,19 @@ import ADDRESSES from "./address.json";
 const contract = new Contract(ZERO_ADDRESS, ABI);
 
 export function useCount() {
-  return useCall<never, [BigNumberish]>(ADDRESSES, contract, "count");
+  return useCall<[], BigNumberish>(ADDRESSES, contract, "count", []);
 }
 
 export function useGetCount() {
-  return useCall<never, [BigNumberish]>(ADDRESSES, contract, "getCount");
+  return useCall<[], BigNumberish>(ADDRESSES, contract, "getCount", []);
 }
 
 export function useDecrement() {
-  return useSend<never>(ADDRESSES, contract, "decrement");
+  return useSend<[]>(ADDRESSES, contract, "decrement");
 }
 
 export function useIncrement() {
-  return useSend<never>(ADDRESSES, contract, "increment");
+  return useSend<[]>(ADDRESSES, contract, "increment");
 }
 
 export function useSetCount() {

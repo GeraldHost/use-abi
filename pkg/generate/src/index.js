@@ -66,14 +66,17 @@ function parseAbi(abi) {
     const returns = parseTypes(obj.outputs);
 
     return {
-      method: obj.name,
       arguments: args,
       returns,
-      argumentTypesString: args.length <= 0 ? "never" : `[${args.join(",")}]`,
-      returnsTypesString:
-        returns.length <= 0 ? "never" : `[${returns.join(",")}]`,
-      hookName: `use${capitalise(obj.name)}`,
       stateMutability: obj.stateMutability,
+      strings: {
+        method: obj.name,
+        hookName: `use${capitalise(obj.name)}`,
+        hookArgs: args.map((arg, i) => `arg${i}: ${arg}`).join(", "),
+        useCallArgs: args.map((_, i) => `arg${i}`).join(", "),
+        typeArgs: args.join(", "),
+        retTypeArgs: returns.length > 1 ? returns.join(", ") : returns[0],
+      },
     };
   });
 

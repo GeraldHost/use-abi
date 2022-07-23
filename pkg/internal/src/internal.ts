@@ -27,14 +27,14 @@ export function useRefresh() {
   return { refresh, tick };
 }
 
-export function useCall<U extends [], T>(
+export function useCall<Args extends any[], Ret>(
   addresses: Addresses,
   contract: Contract,
   method: string,
-  args?: U
+  args?: Args
 ) {
   const { library, chainId } = useProvider();
-  const [data, setData] = useState<T | null>(null);
+  const [data, setData] = useState<Ret | null>(null);
   const { refresh, tick } = useRefresh();
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export function useCall<U extends [], T>(
   return { data, refresh };
 }
 
-export function useSend<U extends any[]>(
+export function useSend<Args extends any[]>(
   addresses: Addresses,
   contract: Contract,
   method: string
@@ -62,7 +62,7 @@ export function useSend<U extends any[]>(
   const { library, chainId } = useProvider();
 
   const send = useCallback(
-    async (...args: U) => {
+    async (...args: Args) => {
       if (!chainId || !library) return;
 
       const address = addresses[chainId];

@@ -9,13 +9,13 @@ import ADDRESSES from "./address.json";
 const contract = new Contract(ZERO_ADDRESS, ABI);
 {{#view}}
 
-export function {{hookName}}() {
-  return useCall<{{argumentTypesString}}, {{returnsTypesString}}>(ADDRESSES, contract, "{{method}}");
+export function {{strings.hookName}}({{strings.hookArgs}}) {
+  return useCall<[{{strings.typeArgs}}], {{strings.retTypeArgs}}>(ADDRESSES, contract, "{{strings.method}}", [{{strings.useCallArgs}}]);
 }
 {{/view}}
 {{#send}}
 
-export function {{hookName}}() {
-  return useSend<{{argumentTypesString}}>(ADDRESSES, contract, "{{method}}");
+export function {{strings.hookName}}() {
+  return useSend<[{{strings.typeArgs}}]>(ADDRESSES, contract, "{{strings.method}}");
 }
 {{/send}}
